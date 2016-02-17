@@ -50,17 +50,22 @@
   <body>
 
     <p>Enter addresses to generate running path</p>
-    <form action="/address-confirmation" id="addresses">
+    <form id="addresses">
         Start: <input type="text" name="start" id="start-field">
         End: <input type="text" name="end" id="end-field">
-        <input type ="submit" value="Submit my address">
+        <input type ="submit" value="Submit my address" id="submit-button">
     </form>
+    <!-- <button type="button" id="submit-button">Submit!</button>  -->
+
 
 
     <div id="map"></div>
     <div id="right-panel">
       <p>Total Distance: <span id="total"></span></p>
     </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+
     <script>
 var map;
 
@@ -85,27 +90,15 @@ function initMap() {
   // directionsDisplay.addListener('directions_changed', function() {
   //   computeTotalDistance(directionsDisplay.getDirections());
   // });
-
-
 // PASS FORM INPUTS TO DISPLAY ROUTE, RATHER THAN HARD-CODING
   displayRoute('683 Sutter St, San Francisco, CA 94109','1355 Market St #900, San Francisco, CA 94103', directionsService,
       directionsDisplay);
-
 }
 
-// document.getElementById.("addresses").addEventListener("submit", myFunction) {
-//   alert("you pressed submit");
-// }
-
-
-
-
-// TODO: CREATE FUNCTION REFRESHMAP(), THAT RELOADS MAP
 function displayRoute(origin, destination, service, display) {
   service.route({
     origin: origin,
     destination: destination,
-    // waypoints: [{location: 'Cocklebiddy, WA'}, {location: 'Broken Hill, NSW'}],
     travelMode: google.maps.TravelMode.WALKING,
     avoidTolls: true
   }, function(response, status) {
@@ -126,6 +119,45 @@ function computeTotalDistance(result) {
   total = total / 1000;
   document.getElementById('total').innerHTML = total + ' km';
 }
+
+
+// Create function updateMap
+// When user clicks submit, call updateMap function, passing in the forms start and end fields
+// to the displayRoute function's origin and destination parameters
+function updateMap(results) {
+  alert("called updateMap");
+  alert(results.start_point);
+
+  mapUpdate = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: {lat: -72, lng: -120}  
+  });
+  directionsDisplayUpdate.setMap(mapUpdate);
+
+  var directionsServiceUpdate = new google.maps.DirectionsService;
+  var directionsDisplayUpdate = new google.maps.DirectionsRenderer({
+    draggable: true,
+    map: mapUpdate,
+    panel: document.getElementById('right-panel')
+  });
+  // replace origin & destination with form values
+  displayRoute('683 Sutter St, San Francisco, CA 94109','1355 Market St #900, San Francisco, CA 94103', directionsService,
+    directionsDisplay);
+}
+
+function getAddressInfo(evt) {
+  evt.preventDefault();
+  alert("the getAddressInfo function was called");
+  var formInputs = {
+    "start": $("#start-field").val(),
+    "end": $("#end-field").val()
+  };
+  $.get('/submit-addresses.json', formInputs, updateMap);
+}
+
+$("#addresses").on("submit", getAddressInfo);
+
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0V7FNkiwsUwxhsQd8hscYoMsuklxOFhg&signed_in=true&callback=initMap"
         async defer></script>
