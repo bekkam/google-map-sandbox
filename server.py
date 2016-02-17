@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def show_map():
-    return render_template('map-draggable-directions.html')
+    return render_template('directions-result.html')
 
 
 # map directions simple - no text directions

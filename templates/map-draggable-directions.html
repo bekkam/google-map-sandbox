@@ -62,26 +62,43 @@
       <p>Total Distance: <span id="total"></span></p>
     </div>
     <script>
+var map;
+
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
+  var directionsService = new google.maps.DirectionsService;
+  var directionsDisplay = new google.maps.DirectionsRenderer;
+  map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: {lat: -72, lng: -120}  
   });
+  directionsDisplay.setMap(map);
 
-  var directionsService = new google.maps.DirectionsService;
-  var directionsDisplay = new google.maps.DirectionsRenderer({
+  // var directionsService = new google.maps.DirectionsService;
+  directionsDisplay = new google.maps.DirectionsRenderer({
     draggable: true,
     map: map,
     panel: document.getElementById('right-panel')
   });
+  // //   directionsDisplay.setMap(map);
 
-  directionsDisplay.addListener('directions_changed', function() {
-    computeTotalDistance(directionsDisplay.getDirections());
-  });
+
+  // directionsDisplay.addListener('directions_changed', function() {
+  //   computeTotalDistance(directionsDisplay.getDirections());
+  // });
+
+
 // PASS FORM INPUTS TO DISPLAY ROUTE, RATHER THAN HARD-CODING
   displayRoute('683 Sutter St, San Francisco, CA 94109','1355 Market St #900, San Francisco, CA 94103', directionsService,
       directionsDisplay);
+
 }
+
+// document.getElementById.("addresses").addEventListener("submit", myFunction) {
+//   alert("you pressed submit");
+// }
+
+
+
 
 // TODO: CREATE FUNCTION REFRESHMAP(), THAT RELOADS MAP
 function displayRoute(origin, destination, service, display) {
