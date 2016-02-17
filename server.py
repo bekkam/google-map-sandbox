@@ -15,4 +15,4 @@ def show_map():
 # map draggable directions - text directions, waypoints, draggable.
 if __name__ == '__main__':
     app.debug = True
-    app.run()
+    app.run(port=5001)
