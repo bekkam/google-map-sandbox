@@ -48,6 +48,15 @@
   <!-- google maps draggable directions -->
 <!-- https://developers.google.com/maps/documentation/javascript/examples/directions-draggable -->
   <body>
+
+    <p>Enter addresses to generate running path</p>
+    <form action="/address-confirmation" id="addresses">
+        Start: <input type="text" name="start" id="start-field">
+        End: <input type="text" name="end" id="end-field">
+        <input type ="submit" value="Submit my address">
+    </form>
+
+
     <div id="map"></div>
     <div id="right-panel">
       <p>Total Distance: <span id="total"></span></p>
@@ -69,7 +78,7 @@ function initMap() {
   directionsDisplay.addListener('directions_changed', function() {
     computeTotalDistance(directionsDisplay.getDirections());
   });
-
+// PASS FORM INPUTS TO DISPLAY ROUTE, RATHER THAN HARD-CODING
   displayRoute('683 Sutter St, San Francisco, CA 94109','1355 Market St #900, San Francisco, CA 94103', directionsService,
       directionsDisplay);
 }
