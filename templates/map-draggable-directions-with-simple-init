@@ -63,8 +63,10 @@
     <script src="http://code.jquery.com/jquery.js"></script>
 
     <script>
+
 var mapUpdate;
 var directionsDisplay;
+$("#right-panel").hide();
 
 function initMap() {
    alert("called initMap");
@@ -106,6 +108,7 @@ function computeTotalDistance(result) {
 // When user clicks submit, call updateMap function, passing in the forms start and end fields
 // to the displayRoute function's origin and destination parameters
 function updateMap(results) {
+  $("#right-panel").show();
   alert("called updateMap");
   alert(results.start_point);
   var directionsServiceUpdate = new google.maps.DirectionsService;
