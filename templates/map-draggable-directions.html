@@ -131,7 +131,6 @@ function computeTotalDistance(result) {
 function updateMap(results) {
   alert("called updateMap");
   alert(results.start_point);
-  // $("#total").append("#right-panel");
   var directionsServiceUpdate = new google.maps.DirectionsService;
   var directionsDisplayUpdate = new google.maps.DirectionsRenderer;
   mapUpdate = new google.maps.Map(document.getElementById('map'), {
@@ -142,10 +141,12 @@ function updateMap(results) {
   directionsDisplayUpdate = new google.maps.DirectionsRenderer({
     draggable: true,
     map: mapUpdate,
-    panel: document.getElementById('right-panel')
-    // panel: $('right-panel').html()
   });
-  // directionsDisplayUpdate.setPanel(document.getElementById('right-panel'));
+// clear the previous text directions in the right panel
+  document.getElementById("right-panel").innerHTML = "";
+// populate right panel with new text directions 
+  directionsDisplayUpdate.setPanel(document.getElementById('right-panel'));
+
   directionsDisplayUpdate.addListener('directions_changed', function() {
     alert("directions changed");
     computeTotalDistance(directionsDisplayUpdate.getDirections());
