@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def show_map():
-    return render_template('map-draggable-directions.html')
+    return render_template('map-draggable-directions-with-simple-init')
 
 
 @app.route('/submit-addresses.json', methods=['GET'])
