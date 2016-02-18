@@ -63,10 +63,10 @@
     <script src="http://code.jquery.com/jquery.js"></script>
 
     <script>
+$("#right-panel").hide();
 
 var mapUpdate;
 var directionsDisplay;
-$("#right-panel").hide();
 
 function initMap() {
    alert("called initMap");
@@ -92,14 +92,16 @@ function displayRoute(origin, destination, service, display) {
     }
   });
 }
-
+// calculates km
 function computeTotalDistance(result) {
+  // alert("computeTotalDistance called");
   var total = 0;
   var myroute = result.routes[0];
   for (var i = 0; i < myroute.legs.length; i++) {
     total += myroute.legs[i].distance.value;
   }
   total = total / 1000;
+  // alert("total is " + total);
   document.getElementById('total').innerHTML = total + ' km';
 }
 
