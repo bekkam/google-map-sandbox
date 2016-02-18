@@ -130,12 +130,16 @@ function updateMap(results) {
     zoom: 4,
     center: {lat: -72, lng: -120}  
   });
-  directionsDisplayUpdate.setMap(mapUpdate);
+  // directionsDisplayUpdate.setMap(mapUpdate);
 
   directionsDisplayUpdate = new google.maps.DirectionsRenderer({
     draggable: true,
     map: mapUpdate,
     panel: document.getElementById('right-panel')
+  });
+
+  directionsDisplayUpdate.addListener('directions_changed', function() {
+    computeTotalDistance(directionsDisplayUpdate.getDirections());
   });
   // replace origin & destination with form values
   displayRoute(results.start_point, results.end_point, directionsServiceUpdate,
