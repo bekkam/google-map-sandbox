@@ -127,23 +127,25 @@ function computeTotalDistance(result) {
 function updateMap(results) {
   alert("called updateMap");
   alert(results.start_point);
-
-  mapUpdate = new google.maps.Map(document.getElementById('map'), {
+  var directionsServiceUpdate = new google.maps.DirectionsService;
+  var directionsDisplayUpdate = new google.maps.DirectionsRenderer;
+  var mapUpdate = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: {lat: -72, lng: -120}  
   });
   directionsDisplayUpdate.setMap(mapUpdate);
 
-  var directionsServiceUpdate = new google.maps.DirectionsService;
-  var directionsDisplayUpdate = new google.maps.DirectionsRenderer({
+  directionsDisplayUpdate = new google.maps.DirectionsRenderer({
     draggable: true,
     map: mapUpdate,
     panel: document.getElementById('right-panel')
   });
   // replace origin & destination with form values
-  displayRoute('683 Sutter St, San Francisco, CA 94109','1355 Market St #900, San Francisco, CA 94103', directionsService,
-    directionsDisplay);
+  displayRoute(results.start_point, results.end_point, directionsServiceUpdate,
+    directionsDisplayUpdate);
 }
+
+
 
 function getAddressInfo(evt) {
   evt.preventDefault();
