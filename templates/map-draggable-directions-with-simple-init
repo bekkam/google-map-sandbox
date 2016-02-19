@@ -86,7 +86,12 @@ function initMap() {
 function displayRoute(origin, destination, service, display) {
   // Initiate directions request to the DirectionsService object with the route() method,
   // and pass a callback to execute when service request completes.
-  // The callback returns a DirectionsResult and DirectionsStatus code
+  // The directions request to DirectionsService, returns: 1) a status code, and 2) a result,
+  // which is a DirectionsResult object.
+  // DirectionsResult is an object literal with fields:
+  // 1) geocoded_waypoints[] contains an array of DirectionsGeocodedWaypoint objects, each one containing details
+  // about the geocoding of origin, destination and waypoints.
+  // 2) routes[] contains an array of DirectionsRoute objects.
   service.route({
     origin: origin,
     destination: destination,
@@ -94,7 +99,8 @@ function displayRoute(origin, destination, service, display) {
     avoidTolls: true
   }, function(response, status) {
     if (status === google.maps.DirectionsStatus.OK) {
-      display.setDirections(response);
+      // 
+      display.setDirections(response);              
     } else {
       alert('Could not display directions due to: ' + status);
     }
@@ -102,6 +108,15 @@ function displayRoute(origin, destination, service, display) {
 }
 
 // calculates km
+// myRoute is the routes array of DirectionsRoute objects.
+// DirectionsRoute objects have the field legs[], which is an array of DirectionsLeg 
+// objects.  A separate leg will be present for each waypoint or destination specified. (A route with no 
+// waypoints will contain exactly one DirectionsLeg.) Each leg consists of a series of DirectionSteps.
+
+
+// For each DirectionsRoute object in route array, get its array of DirectionsLeg objects.
+// For each DirectionsLeg object, get the value of the distance covered by the leg, in meters,
+// and add it to total.
 function computeTotalDistance(result) {
   // alert("computeTotalDistance called");
   var total = 0;
@@ -123,8 +138,11 @@ function updateMap(results) {
   alert("called updateMap");
   alert(results.start_point);
   // DirectionsService object calculates directions; it returns a series of waypoints. 
-  // Directions are displayed as a polyline drawing the route on a map, or as a series of text descriptions
-  // within a <div> element.
+
+  // DirectionsResult contains the result  of the directions query; pass it to 
+  // a DirectionsRenderer object to diplay the result on the map.
+  // DirectionsRenderer handles display of polyline and associated markers on a map,
+  // as well as text descriptions within a <div> element.
   var directionsService = new google.maps.DirectionsService;
 
   var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -133,7 +151,7 @@ function updateMap(results) {
     zoom: 4,
     center: {lat: -72, lng: -120}  
   });
-
+  // 
   directionsDisplay = new google.maps.DirectionsRenderer({
     draggable: true,
     map: mapUpdate,
@@ -142,7 +160,9 @@ function updateMap(results) {
   // clear the previous text directions in the right panel
   document.getElementById("right-panel").innerHTML = "";
   
-  // populate right panel with new text directions 
+  // populate right panel with new text directions
+  // by calling setPanel method on DirectionsRenderer object, and specifying the div
+  // panel in which to display the directions
   directionsDisplay.setPanel(document.getElementById('right-panel'));
 
   directionsDisplay.addListener('directions_changed', function() {
