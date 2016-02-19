@@ -4,6 +4,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Draggable directions</title>
+    <!-- Specify sizes in style, so that CSS works in both quirks and standard mode -->
     <style>
       html, body {
         height: 100%;
@@ -54,7 +55,7 @@
         End: <input type="text" name="end" id="end-field">
         <input type ="submit" value="Submit my address" id="submit-button">
     </form>
-
+<!-- Create a div element named 'map' to hold Map -->
     <div id="map"></div>
     <div id="right-panel">
       <p>Total Distance: <span id="total"></span></p>
@@ -63,13 +64,17 @@
     <script src="http://code.jquery.com/jquery.js"></script>
 
     <script>
+// Hide directions panel until directions should be rendered
 $("#right-panel").hide();
 
-var mapUpdate;
-var directionsDisplay;
-
+// Define a JS function that creates a map in the div.
+// Function initMap is called when user loads page.
 function initMap() {
    alert("called initMap");
+   // The Map constructor creates a new map inside the specified html container. 
+   // Create new object of the class Map, called map, and place it
+   // inside the html container of the same name.   
+   // Specify the map object's required options: zoom and center.
    var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
     center: {lat: 37.7833, lng: -122.4167}
@@ -79,6 +84,9 @@ function initMap() {
 
 
 function displayRoute(origin, destination, service, display) {
+  // Initiate directions request to the DirectionsService object with the route() method,
+  // and pass a callback to execute when service request completes.
+  // The callback returns a DirectionsResult and DirectionsStatus code
   service.route({
     origin: origin,
     destination: destination,
@@ -92,6 +100,7 @@ function displayRoute(origin, destination, service, display) {
     }
   });
 }
+
 // calculates km
 function computeTotalDistance(result) {
   // alert("computeTotalDistance called");
@@ -113,29 +122,37 @@ function updateMap(results) {
   $("#right-panel").show();
   alert("called updateMap");
   alert(results.start_point);
-  var directionsServiceUpdate = new google.maps.DirectionsService;
-  var directionsDisplayUpdate = new google.maps.DirectionsRenderer;
-  mapUpdate = new google.maps.Map(document.getElementById('map'), {
+  // DirectionsService object calculates directions; it returns a series of waypoints. 
+  // Directions are displayed as a polyline drawing the route on a map, or as a series of text descriptions
+  // within a <div> element.
+  var directionsService = new google.maps.DirectionsService;
+
+  var directionsDisplay = new google.maps.DirectionsRenderer;
+
+  var mapUpdate = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: {lat: -72, lng: -120}  
   });
 
-  directionsDisplayUpdate = new google.maps.DirectionsRenderer({
+  directionsDisplay = new google.maps.DirectionsRenderer({
     draggable: true,
     map: mapUpdate,
   });
-// clear the previous text directions in the right panel
-  document.getElementById("right-panel").innerHTML = "";
-// populate right panel with new text directions 
-  directionsDisplayUpdate.setPanel(document.getElementById('right-panel'));
 
-  directionsDisplayUpdate.addListener('directions_changed', function() {
+  // clear the previous text directions in the right panel
+  document.getElementById("right-panel").innerHTML = "";
+  
+  // populate right panel with new text directions 
+  directionsDisplay.setPanel(document.getElementById('right-panel'));
+
+  directionsDisplay.addListener('directions_changed', function() {
     alert("directions changed");
     computeTotalDistance(directionsDisplayUpdate.getDirections());
   });
-  // replace origin & destination with form values
-  displayRoute(results.start_point, results.end_point, directionsServiceUpdate,
-    directionsDisplayUpdate);
+  // Call displayRoute function, passing in form values as origin and destination,
+  // the DirectionsService object, and the DirectionsRenderer 
+  displayRoute(results.start_point, results.end_point, directionsService,
+    directionsDisplay);
 }
 
 
@@ -154,6 +171,8 @@ $("#addresses").on("submit", getAddressInfo);
 
 
     </script>
+    <!-- script to load JS file required to use Google Maps api -->
+    <!-- async attribute permits browser to render the rest of the website while the Maps API loads -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0V7FNkiwsUwxhsQd8hscYoMsuklxOFhg&signed_in=true&callback=initMap"
         async defer></script>
   </body>
@@ -163,6 +182,5 @@ $("#addresses").on("submit", getAddressInfo);
 -Change JS to Jquery
 -getAddressInfo likely unnecessary
 -Remove debug alerts
--Initialize map to simple map, w/o directions, and have updateMap take care of user submits
 -Migrate JS to separate files
  -->
